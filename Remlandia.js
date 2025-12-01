@@ -13,8 +13,6 @@ const enemies = {
         xp: 5
     },
 };
-
-
 // ---------------- PLAYER DATA ----------------
 let player = {
     name: "Keistutis",
@@ -24,28 +22,12 @@ let player = {
     defense: 2,
     level: 1,
     xp: 0,
-    xpToNext: 20,
+    xpToNext: 30,
     inventory: {
         
     }
 };
-//-----------SAVE FUNCTIONS---------------
-// --- SAVE GAME ---
-function saveGame() {
-    localStorage.setItem("myGameSave", JSON.stringify(player));
-}
-// --- LOAD GAME ---
-function loadGame() {
-    const save = localStorage.getItem("myGameSave");
-    if (!save) {
-        return;
-    }
-        const data = JSON.parse(save);
-    player.name = data.name;
-    player.hp = data.hp;
-    player.xp = data.xp;
-    player.level = data.level; // restore
-}
+
 
 // --------------- UTILITY FUNCTIONS ---------------
 function gameLog(text) {
@@ -56,6 +38,7 @@ function gameLog(text) {
 function updateSubmenu(html) {
     document.getElementById("submenu").innerHTML = html;
 };
+
 
 // ----------- PROFILE -------------
 function openProfile(){
@@ -90,13 +73,46 @@ function levelUp() {
 }
 
 // ---------------- INVENTORY ----------------
-function openInventory() {
-    let text = "<h3>Inventory</h3>";
-    for (let item in player.inventory) {
-        text += `${item}: ${player.inventory[item]}<br>`;
+function updateInventoryDisplay() {
+    const invDiv = document.getElementById("inventoryDisplay");
+    if (!invDiv) return;
+
+    if (Object.keys(player.inventory).length === 0) {
+        invDiv.innerHTML = "<p>Inventory is empty.</p>";
+        return;
     }
-    updateSubmenu(text);
+
+    let html = "";
+    for (let item in player.inventory) {
+        html += `
+            <div>
+                <strong>${item}: ${player.inventory[item]}</strong>
+                <button onclick="removeItem('${item}', 1, updateInventoryDisplay())">-1</button>
+                <button onclick="removeItem('${item}', ${player.inventory[item]}, updateInventoryDisplay())">Remove All</button>
+            </div>
+        `;
+    }
+
+    invDiv.innerHTML = html;
 }
+// ----------remove item--------
+function removeItem(itemName, amount) {
+    // If item does not exist  nothing to remove
+    if (!player.inventory[itemName]) {
+        return false; 
+    }
+
+    player.inventory[itemName] -= amount;
+
+    // If item drops to 0 or below  delete completely
+    if (player.inventory[itemName] <= 0) {
+        delete player.inventory[itemName];
+    }
+
+    saveGame(); // update save file
+    return true;
+}
+
 
 // ---------------- CRAFTING ----------------
 const recipes = {
@@ -120,7 +136,7 @@ const recipes = {
 function openCrafting() {
     let html = "<h3>Crafting</h3>";
     for (let recipe in recipes) {
-        html += `<button onclick="craft('${recipe}')">${recipe}</button><br>`;
+        html += `<button onclick="craft('${recipe}'), updateInventoryDisplay()">${recipe}</button><br>`;
     }
     updateSubmenu(html);
 }
@@ -142,7 +158,6 @@ function craft(name) {
     }
 
     r.craft();
-    openInventory();
 }
 
 function addItem(name, amount = 1) {
@@ -151,21 +166,44 @@ function addItem(name, amount = 1) {
 
 // ---------------- EXPLORATION ----------------
 function farm() {
-    const roll = Math.floor(Math.random() * 5);
+    const roll = Math.floor(Math.random() * 101);
 
-    if (roll == 0) {
+    if (roll <= 10) {
         gameLog("You find an herb!");
         addItem("Herb");
-    } else if (roll == 1) {
+    } else if (roll <= 20 &&  roll > 10) {
         gameLog("You find some flour!");
         addItem("Flour");
     }
-    else if (roll == 2) {
+    else if (roll <= 100 && roll > 20) {
         gameLog("You find an apple!");
         addItem("Apple");
 }
 }
 // ---------------COMBAT MENU-----------
+  function chooseEnemyMenu() {
+    let html = "<h3>Choose an enemy to fight</h3>";
+    html += `<select id='enemySelect'>`;
+
+    for (let e in enemies) {
+        html += `<option value='${e}'>${e}</option>`;
+    }
+
+    html += `</select><br><br>`;
+    html += `<button onclick='startSelectedEnemy()'>Fight!</button>`;
+
+    updateSubmenu(html);
+}
+function startSelectedEnemy() {
+    let chosen = document.getElementById("enemySelect").value;
+
+    // Deep copy the enemy so it's not modifying the original
+    let enemy = JSON.parse(JSON.stringify(enemies[chosen]));
+
+    gameLog(`A ${enemy.name} attacks!`);
+    startCombat(enemy);
+};
+
 // ---------------- COMBAT SYSTEM ----------------
 function startCombat(enemy) {
     updateSubmenu(`
@@ -186,12 +224,14 @@ function attackEnemy() {
     if (e.hp <= 0 && e.name == "Chicken") {
         gameLog(`You defeated the ${e.name} and received 1 Egg and 2XP`);
         updateSubmenu("");
+        chooseEnemyMenu();
         addItem("Egg"); // reward example
         addXP(2)
         return;
     } else if (e.hp <= 0 && e.name == "Cow") {
         gameLog(`You defeated the ${e.name} and received 1 Milk and 5XP`);
         updateSubmenu("");
+        chooseEnemyMenu();
         addItem("Milk"); // reward example
         addXP(5)
         return;
@@ -230,16 +270,56 @@ function eatPie(){
     gameLog(`You healed! HP is now ${player.hp}/${player.maxHp}`);
 
 }
-
-// ---------------- SAVE / LOAD ----------------
+//-----------SAVE FUNCTIONS---------------
+// --- SAVE GAME ---
 function saveGame() {
     localStorage.setItem("textRPGsave", JSON.stringify(player));
 }
+// --- LOAD GAME ---
+let hasSave = false;
 
 function loadGame() {
-    let data = localStorage.getItem("textRPGsave");
-    if (data) {
-        player = JSON.parse(data);
-    } else {
+    const data = localStorage.getItem("textRPGsave");
+
+    if (!data) {
+        hasSave = false;
+        return;
     }
+
+    hasSave = true;
+    const save = JSON.parse(data);
+
+    // Restore every property
+    player.name     = save.name;
+    player.hp       = save.hp;
+    player.maxHp    = save.maxHp;
+    player.attack   = save.attack;
+    player.defense  = save.defense;
+    player.level    = save.level;
+    player.xp       = save.xp;
+    player.xpToNext = save.xpToNext;
+
+    // Restore nested object
+    player.inventory = save.inventory || {};
+};
+function hasExistingSave() {
+    return localStorage.getItem("textRPGsave") !== null;
+}
+//-----------NEW GAME-------------
+function newGame() {
+    // Reset player to starting stats
+    player = {
+        name: "Keistutis",
+        hp: 20,
+        maxHp: 20,
+        attack: 5,
+        defense: 2,
+        level: 1,
+        xp: 0,
+        xpToNext: 20,
+        inventory: {}
+    };
+
+    saveGame();                 // Write the new save
+    window.location.href = "index.html"; // Go to the starting page
 };
