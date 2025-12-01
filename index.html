@@ -16,7 +16,7 @@
 
 <div id="game">
     <h1>Remlandia</h1>
-       <div id="paragraph" class="section1"> <p1>Sveikas atvykes i Remlandija. Eik i ferma krc.</p1></div>
+       <div id="paragraph" class="section1"> <p1>Sveikas atvykes i Remlandija.</p1></div>
 
     <div id="output" class="section"></div>
 
@@ -24,28 +24,31 @@
 
     <div class="section">
         <h3>Main Menu</h3>
-        <button onclick="openProfile()">Profile</button>
-        <button onclick="openInventory()">Inventory</button>
-        <button onclick="openCrafting()">Crafting</button>
-        <button onclick="saveGame()">Save</button>
-        <button onclick="loadGame()">Load</button>
-    </div>
-
-    <div class="section">
-        <h3>Exploration Menu</h3>
-        <button onclick="window.location.href='farmArea.html'; saveGame()">Farm</button>
-        <button onclick="forest()">Gather in Forest</button>
-        <button onclick="lake()">Fish in Lake</button>
-
-    </div>
+<button id="continueBtn">Continue</button>
+<button id="newGameBtn">New Game</button>
 
     
 </div>
 
 <script src="Remlandia.js"></script>
 <script>
-    loadGame();  
-</script>
+    loadGame(); // check if save exists
 
-</body>
-</html>
+    const continueBtn = document.getElementById("continueBtn");
+    const newGameBtn = document.getElementById("newGameBtn");
+
+    if (!hasExistingSave()) {
+        continueBtn.disabled = true;
+        continueBtn.textContent = "No Save Found";
+    }
+
+    continueBtn.addEventListener("click", () => {
+        loadGame();
+        window.location.href = "startpage.html"; // load game page
+    });
+
+    newGameBtn.addEventListener("click", () => {
+        newGame();
+        window.location.href = "startpage.html";
+    });
+</script>
