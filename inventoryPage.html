@@ -3,35 +3,28 @@
 <head>
 <meta charset="UTF-8"/>
 <title>Remlandia</title>
-<style>
-    body { background:#111; color:#eee; font-family:Arial; padding:20px; }
-    #game { max-width:700px; margin:auto; }
-    button { margin:5px; padding:8px 12px; background:#333; color:white; border:1px solid #555; cursor:pointer; }
-    button:hover { background:#555; }
-    .section { margin-top:20px; padding:10px; background:#1a1a1a; border:1px solid #333; }
-    .section1 { margin-top:20px; padding:10px; background:#ac7676; border:1px solid #333; }
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-
 <div id="game">
     <h1>Inventory</h1>
-       <div id="paragraph" class="section1"> <p1>Your Inventory</p1></div>
+    <div id="profile" class="leftFixed"></div> <!-- Player info -->
+    <div id="gameLog" class="log">Log:</div> <!-- Messages -->
+<div class="game-container">
+    <div id="inventoryDisplay" class="inventory"></div>
+    <div id="craftingDisplay" class="crafting"></div>
+</div> <div class="section">
+        <h3>Main Menu</h3>
+        <button onclick="window.location.href='shopPage.html'">Shop</button>
+</div>
 
-    <div id="log" class="section"></div>
-    <div id="inventoryDisplay" class="section">
-        </div>
-    <div id="submenu" class="section"></div>
+
     <div class="section">
-        <button onclick="openCrafting()">Crafting</button>
-    </div>
-
-
-    <div class="section">
-        <h2>Exploration Menu</h2>
-        <button onclick="window.location.href='farmArea.html'; saveGame()">Farm</button>
-        <button onclick="window.location.href='startpage.html'; saveGame()">Back to Main</button>
-        <button onclick="window.location.href='index.html'; saveGame()">Back to Title</button>
+        <h3>Exploration Menu</h3>
+        <button onclick="saveGame(); window.location.href='farmArea.html';">Farm</button>
+        <button onclick="saveGame(); window.location.href='banditCamp.html';">Bandit Camp</button>
+        <button onclick="saveGame(); window.location.href='startpage.html'">Back to Main</button>
+        <button onclick="saveGame(); window.location.href='index.html'">Back to Title</button>
     </div>
 
     
@@ -41,6 +34,8 @@
 <script>
     loadGame(); 
     updateInventoryDisplay(); 
+    openCrafting();
+    openProfile();
 </script>
 
 </body>
