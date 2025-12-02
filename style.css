@@ -89,4 +89,29 @@ body {
     border-radius: 8px;
     color: white;
     border: 2px solid #444;
+
+}
+/* simple tooltip */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    margin: 4px;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    background: rgba(0,0,0,0.85);
+    color: #fff;
+    padding: 6px;
+    border-radius: 5px;
+    position: absolute;
+    z-index: 100;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: pre-line; /* <- keeps the newlines in tooltip */
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
 }
