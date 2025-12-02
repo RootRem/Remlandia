@@ -141,7 +141,7 @@ function getRandomResource(resources) {
 function chooseEnemyMenu(area) {
     const areaEnemies = Object.values(enemies).filter(e => e.area === area);
 
-    let buttonsHTML = `<h3>Choose an action</h3><div class="enemyButtons">`;
+    let buttonsHTML = `<h3>Choose an action</h3><br><p>Gathering costs 1 stamina, fighting 10 stamina</p><div class="enemyButtons">`;
 
     // Add a placeholder div for the gather button
     if (area === "farm") {
@@ -352,37 +352,91 @@ function displayShopBuy() {
     shopBuyDiv.innerHTML = html;
 }
 // ---------------- CRAFTING ----------------
+
+// Creates one craft button with tooltip
+function createCraftButton(recipeName) {
+    const recipe = recipes[recipeName];
+
+    const div = document.createElement("div");
+    div.className = "tooltip";
+
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.textContent = recipeName;
+
+    const tip = document.createElement("span");
+    tip.className = "tooltiptext";
+
+    // Build tooltip lines
+    const lines = ["Requires:"];
+    for (let item in recipe.requires) {
+        lines.push(`${item} ×${recipe.requires[item]}`);
+    }
+    tip.textContent = lines.join("\n");
+
+    // Button click → call the central craft() function
+    btn.addEventListener("click", () => {
+        craft(recipeName);
+    });
+
+    div.appendChild(btn);
+    div.appendChild(tip);
+
+    return div;
+}
+
+
+// Opens the crafting menu
 function openCrafting() {
     const craftDiv = document.getElementById("craftingDisplay");
     if (!craftDiv) return;
 
-    let html = "<h3>Crafting</h3>";
-    for (let recipe in recipes) {
-        html += `<button onclick="craft('${recipe}'); updateInventoryDisplay();">${recipe}</button></div>`;
+    craftDiv.innerHTML = ""; // Clear old content
+
+    const h3 = document.createElement("h3");
+    h3.textContent = "Crafting";
+    craftDiv.appendChild(h3);
+
+    // Create one button for each recipe
+    for (let recipeName in recipes) {
+        craftDiv.appendChild(createCraftButton(recipeName));
     }
-    craftDiv.innerHTML = html;
 }
 
+
+// Central crafting logic – THIS is the real craft function
 function craft(name) {
     const r = recipes[name];
     if (!r) return;
 
+    // Check materials
     for (let item in r.requires) {
-        if (!player.inventory[item] || player.inventory[item] < r.requires[item]) {
+        if (!player.inventory[item] ||
+            player.inventory[item] < r.requires[item]) {
             gameLog("You don't have the required materials!");
             return;
         }
     }
 
+    // Remove materials
     for (let item in r.requires) {
         removeItem(item, r.requires[item]);
     }
 
+    // Execute the recipe's craft effect
     r.craft();
-    openProfile();
+
+    // Update UI
     updateInventoryDisplay();
+    openProfile();
+
+    // Save game
     saveGame();
 }
+
+// Make craft() available to button event listeners
+window.craft = craft;
+
 // ----------------XP ----------------
 function addXP(xp) {
     player.xp += xp;
@@ -525,5 +579,6 @@ window.addEventListener("load", () => {
     openProfile();
     initArea();
 });
+
 
 
