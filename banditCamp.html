@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<title>Remlandia</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="game">
+    <h1>Bandit Camp</h1>
+    <div id="profile" class="leftFixed"></div> <!-- Player info -->
+    <div id="gameLog" class="log">Log:</div> <!-- Messages -->
+    <div id="submenu" class="centerBox"></div> <!-- Combat menu -->
+    <body data-area="banditCamp"></body>
+    <div class="section">
+        <h3>Main Menu</h3>
+        <button onclick="saveGame(); window.location.href='inventoryPage.html'">Inventory</button>
+    </div>
+
+    <div class="section">
+        <h3>Exploration Menu</h3>
+        <button onclick="saveGame(); window.location.href='farmArea.html'">Farm</button>
+        <button onclick="saveGame(); window.location.href='startpage.html'">Back to Main</button>
+        <button onclick="saveGame(); window.location.href='index.html'">Back to Title</button>
+
+    </div>
+
+    
+</div>
+
+<script src="Remlandia.js"></script>
+<script>
+    loadGame();
+    openProfile();
+    initArea(); // initialize combat menu based on area
+    chooseEnemyMenu();
+</script>
+<script>
+
+</script>
+
+</body>
+</html>

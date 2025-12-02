@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<title>Remlandia</title>
+<link rel="stylesheet" href="style.css">
+<body>
+<div id="game">
+    <h1>Remlandia</h1>
+        <div id="paragraph" class="section1"> <p1>Sveikas atvykes i Remlandija.</p1></div>
+        <div id="profile" class="leftFixed"></div> <!-- Player info -->
+        <div id="gameLog" class="log">Log:</div> <!-- Messages -->
+<div id="shopWrapper">
+        <div id="sellShop"></div> 
+        <div id="buyShop"></div>
+
+</div>
+    <div class="section">
+        <h3>Main Menu</h3>
+        <button onclick="window.location.href='inventoryPage.html'; openInventory()">Inventory</button>
+    </div>
+
+    <div class="section">
+        <h3>Exploration Menu</h3>
+        <button onclick="saveGame(); window.location.href='farmArea.html'">Farm</button>
+        <button onclick="saveGame(); window.location.href='banditCamp.html';">Bandit Camp</button>
+        <button onclick="saveGame(); window.location.href='startpage.html'">Back to Main</button>
+        <button onclick="saveGame(); window.location.href='index.html'">Back to Title</button>
+    </div>
+
+    
+</div>
+
+<script src="Remlandia.js"></script>
+<script>
+    loadGame();
+    updateShop();
+    openProfile();
+</script>
+
+</body>
+</html>
