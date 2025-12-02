@@ -3,36 +3,36 @@
 <head>
 <meta charset="UTF-8"/>
 <title>Remlandia</title>
-<style>
-    body { background:#111; color:#eee; font-family:Arial; padding:20px; }
-    #game { max-width:700px; margin:auto; }
-    button { margin:5px; padding:8px 12px; background:#333; color:white; border:1px solid #555; cursor:pointer; }
-    button:hover { background:#555; }
-    .section { margin-top:20px; padding:10px; background:#1a1a1a; border:1px solid #333; }
-    .section1 { margin-top:20px; padding:10px; background:#ac7676; border:1px solid #333; }
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div id="game">
     <h1>Remlandia</h1>
-       <div id="paragraph" class="section1"> <p1>Sveikas atvykes i Remlandija.</p1></div>
+    <div id="paragraph" class="section1">
+        <p>Sveikas atvykes i Remlandija.</p>
+    </div>
+<div id="startScreen">
+    <label>Enter your name:</label>
+    <input type="text" id="playerNameInput" placeholder="Your name">
+    <button type="button" onclick="startNewGame()">Start New Game</button>
+</div>
 
-    <div id="output" class="section"></div>
 
-    <div id="submenu" class="section"></div>
-
+<div id="gameScreen">
+    <h2 id="playerNameDisplay"></h2>
     <div class="section">
         <h3>Main Menu</h3>
-<button id="continueBtn">Continue</button>
-<button id="newGameBtn">New Game</button>
-
-    
+        <button id="continueBtn">Continue</button>
+    </div>
 </div>
 
 <script src="Remlandia.js"></script>
 <script>
-    loadGame(); // check if save exists
+    // helper function
+    function hasExistingSave() {
+        return localStorage.getItem("playerData") !== null;
+    }
 
     const continueBtn = document.getElementById("continueBtn");
     const newGameBtn = document.getElementById("newGameBtn");
@@ -49,6 +49,9 @@
 
     newGameBtn.addEventListener("click", () => {
         newGame();
-        window.location.href = "startpage.html";
+        window.location.href = "startpage.html"; // go to game page
     });
 </script>
+
+</body>
+</html>
