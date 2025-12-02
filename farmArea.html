@@ -3,34 +3,25 @@
 <head>
 <meta charset="UTF-8"/>
 <title>Remlandia</title>
-<style>
-    body { background:#111; color:#eee; font-family:Arial; padding:20px; }
-    #game { max-width:700px; margin:auto; }
-    button { margin:5px; padding:8px 12px; background:#333; color:white; border:1px solid #555; cursor:pointer; }
-    button:hover { background:#555; }
-    .section { margin-top:20px; padding:10px; background:#1a1a1a; border:1px solid #333; }
-    .section1 { margin-top:20px; padding:10px; background:#ac7676; border:1px solid #333; }
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-
 <div id="game">
     <h1>Farm Area</h1>
-
-    <div id="log" class="section"></div>
-    <div id="submenu" class="section"></div>
+    <div id="profile" class="leftFixed"></div> <!-- Player info -->
+    <div id="gameLog" class="log">Log:</div> <!-- Messages -->
+    <div id="submenu" class="centerBox"></div> <!-- Combat menu -->
+    <body data-area="farm"></body>
     <div class="section">
         <h3>Main Menu</h3>
-        <button onclick="openProfile()">Profile</button>
-        <button onclick="window.location.href='inventoryPage.html'; openInventory(); saveGame()">Inventory</button>
+        <button onclick="saveGame(); window.location.href='inventoryPage.html'">Inventory</button>
     </div>
 
     <div class="section">
         <h3>Exploration Menu</h3>
-        <button onclick="farm(); saveGame()">Gather Resources</button>
-        <button onclick="chooseEnemyMenu(); ">Fight Animals</button>
-        <button onclick="window.location.href='startpage.html'; saveGame()">Back to Main</button>
-        <button onclick="window.location.href='index.html'; saveGame()">Back to Title</button>
+        <button onclick="saveGame(); window.location.href='banditCamp.html';">Bandit Camp</button>
+        <button onclick="saveGame(); window.location.href='startpage.html'">Back to Main</button>
+        <button onclick="saveGame(); window.location.href='index.html'">Back to Title</button>
 
     </div>
 
@@ -39,7 +30,10 @@
 
 <script src="Remlandia.js"></script>
 <script>
-    loadGame();  
+    loadGame();
+    openProfile();
+    initArea(); // initialize combat menu based on area
+    chooseEnemyMenu();
 </script>
 <script>
 
