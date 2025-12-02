@@ -14,7 +14,7 @@ let player = {
     inventory: {}
 };
 const staminaCostFight = 10;
-
+const staminaCostGather = 1;
 // Regenerate stamina periodically (already saves)
 function regenerateStamina() {
     if (player.stamina < player.maxStamina) {
@@ -96,6 +96,13 @@ function initArea() {
 }
 // ---------------- RESOURCE GATHERING ----------------
 function farm() {
+            if (player.stamina < staminaCostGather) {
+        gameLog("You are too tired to gather! (Not enough stamina)");
+        return;
+    }
+
+    // Reduce stamina
+    player.stamina -= staminaCostGather;
     // Example resource gathering
     const resources = [
         { name: "Wheat", chance: 0.37 },
@@ -518,4 +525,5 @@ window.addEventListener("load", () => {
     openProfile();
     initArea();
 });
+
 
