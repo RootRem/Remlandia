@@ -96,7 +96,7 @@ function initArea() {
 }
 // ---------------- RESOURCE GATHERING ----------------
 function farm() {
-            if (player.stamina < staminaCostGather) {
+    if (player.stamina < staminaCostGather) {
         gameLog("You are too tired to gather! (Not enough stamina)");
         return;
     }
@@ -109,7 +109,7 @@ function farm() {
         { name: "Apple", chance: 0.37 },
         { name: "Sage", chance: 0.25 }
     ];   
-     const resource = getRandomResource(resources);
+    const resource = getRandomResource(resources);
     if (!resource) {
         gameLog("You found nothing this time.");
         return;
@@ -186,7 +186,7 @@ function startCombat(enemy) {
         <button onclick="attackEnemy()">Attack</button>
         <button onclick="usePotion(); updateInventoryDisplay();">Use Potion</button>
         <button onclick="eatPie(); updateInventoryDisplay();">Eat Pie</button>
-    `);
+        `);
     window.currentEnemy = enemy;
 }
 
@@ -328,8 +328,8 @@ function displayShopSell() {
             const price = sellPrices[item] || 0;
 
             html += `<div><strong>${item} (${amount})</strong> — <b>${price}g</b>
-                     <button onclick="sellItem('${item}')">Sell 1</button>
-                     </div>`;
+                <button onclick="sellItem('${item}')">Sell 1</button>
+                </div>`;
         }
     }
 
@@ -345,8 +345,8 @@ function displayShopBuy() {
         const cost = buyPrices[item] || 0;
 
         html += `<div><strong>${item}</strong> — <b>${cost}g</b>
-                 <button onclick="buyItem('${item}')">Buy 1</button>
-                 </div>`;
+            <button onclick="buyItem('${item}')">Buy 1</button>
+            </div>`;
     }
 
     shopBuyDiv.innerHTML = html;
@@ -445,17 +445,17 @@ function addXP(xp) {
     if (player.xp >= player.xpToNext) {
         const oldXpToNext = player.xpToNext;  // store requirement BEFORE update
         player.level++;
-    // carry-over XP calculation always uses the OLD requirement
+        // carry-over XP calculation always uses the OLD requirement
         player.xp = player.xp - oldXpToNext;
         player.xpToNext = Math.floor(player.xpToNext * 2);
 
-    // Stat increases
+        // Stat increases
         player.maxHp += 5;
         player.attack += 1;
         player.defense += 1;
         player.maxStamina += 10;
 
-    // Heal to full on level up
+        // Heal to full on level up
         //player.hp = player.maxHp;
         gameLog(`You leveled up to level ${player.level}!`);
     }
@@ -491,7 +491,7 @@ function openProfile() {
         <p><b>Level:</b> ${player.level}</p>
         <p><b>XP:</b> ${player.xp}/${player.xpToNext}</p>
         <p><b>Gold:</b> ${player.gold}</p>
-    `;
+        `;
 }
 
 function saveGame() {
